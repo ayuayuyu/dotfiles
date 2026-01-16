@@ -15,35 +15,6 @@ config.colors = {
 config.color_scheme = 'MaterialDesignColors'
 config.window_background_opacity = 0.85
 
--- font config
--- config.font = wezterm.font("ProggyClean Nerd Font Mono", {
---   weight = "Regular",
---   stretch = "Normal",
---   style = "Normal",
--- })
-
--- config.font_rules = {
---   {
---     italic = true,
---     font = wezterm.font_with_fallback({
---       { family = "ProggyClean Nerd Font Mono", weight = "Regular", style = "Normal" },
---     }),
---   },
---   {
---     intensity = "Bold",
---     font = wezterm.font_with_fallback({
---       { family = "ProggyClean Nerd Font Mono", weight = "Regular", style = "Normal" },
---     }),
---   },
---   {
---     intensity = "Half",
---     font = wezterm.font_with_fallback({
---       { family = "ProggyClean Nerd Font Mono", weight = "Regular", style = "Normal" },
---     }),
---   },
--- }
-
--- config.font_size = 24
 -- -- font config
 config.font = wezterm.font("Hack Nerd Font Propo", {weight="Medium", stretch="Normal", style="Normal"})
 config.font_rules = {
