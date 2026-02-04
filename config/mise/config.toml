@@ -1,5 +1,7 @@
 [tools]
 bun = "latest"
 go = "latest"
+neovim = "latest"
 node = "latest"
 pnpm = "latest"
+rust = "latest"
