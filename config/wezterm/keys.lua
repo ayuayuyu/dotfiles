@@ -15,7 +15,9 @@ return {
     { key = "Backspace", mods = "CMD", action = act.SendKey { key = "u", mods = "CTRL" } },
     { key = "Backspace", mods = "ALT", action = act.SendKey { key = "w", mods = "CTRL" } },
 
-    { key = 'f', mods = 'SHIFT|META', action = act.ToggleFullScreen },
+    -- 変更箇所: 画面の最大化/元に戻す (Ctrl + Cmd + f)
+    { key = 'f', mods = 'CTRL|CMD', action = act.ToggleFullScreen },
+
     { key = 'w', mods = 'CMD', action = act.CloseCurrentTab { confirm = false } },
     { key = 'w', mods = 'ALT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
   }
