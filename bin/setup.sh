@@ -96,7 +96,7 @@ if [ -d "$DOTFILES_DIR/config" ]; then
         target="$HOME/.config/$filename"
         
         link_file "$file" "$target"
-    done
+    done``
 fi
 
 # WezTerm (wezterm.lua -> $HOME/.wezterm.lua)
