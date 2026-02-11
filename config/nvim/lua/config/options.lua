@@ -1,5 +1,3 @@
--- ~/.config/nvim/lua/config/options.lua
-
 -- 基本設定
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -19,4 +17,3 @@ vim.opt.expandtab = true -- タブをスペースに変換
 -- 検索系 (追加しておくと便利です)
 vim.opt.ignorecase = true -- 大文字小文字を無視
 vim.opt.smartcase = true -- 大文字が含まれる場合は区別
-
