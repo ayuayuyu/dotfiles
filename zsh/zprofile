@@ -84,6 +84,17 @@ path=(
 )
 
 #
+# GitHub Token (mise の GitHub API レート制限回避)
+# gh CLI でログイン済みの場合はトークンを自動取得する
+#
+
+if [[ -z "$GITHUB_TOKEN" ]] && command -v gh &>/dev/null; then
+  if gh auth status &>/dev/null 2>&1; then
+    export GITHUB_TOKEN="$(gh auth token 2>/dev/null)"
+  fi
+fi
+
+#
 # Less
 #
 
