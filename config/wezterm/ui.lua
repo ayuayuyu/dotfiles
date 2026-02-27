@@ -1,6 +1,6 @@
 local wezterm = require("wezterm")
 
-return {
+local config = {
 	-- フォント設定
 	font = wezterm.font("Hack Nerd Font Propo", { weight = "Medium" }),
 	font_size = 14.0,
@@ -8,7 +8,6 @@ return {
 
 	-- ウィンドウ設定
 	window_background_opacity = 0.75,
-	macos_window_background_blur = 30,
 	window_decorations = "RESIZE",
 	default_cursor_style = "BlinkingBar",
 
@@ -21,3 +20,10 @@ return {
 		brightness = 0.6,
 	},
 }
+
+-- macOS専用: ウィンドウ背景のぼかし効果
+if wezterm.target_triple:find("darwin") ~= nil then
+	config.macos_window_background_blur = 30
+end
+
+return config
