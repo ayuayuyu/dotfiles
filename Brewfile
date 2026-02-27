@@ -1,5 +1,17 @@
+# CLIツール
 brew "git"
-brew "mise"
+brew "gh"           # GitHub CLI
+brew "mise"         # ランタイムバージョン管理 (node, go, rust, etc.)
+brew "fzf"          # ファジーファインダー
+brew "bat"          # シンタックスハイライト付きcat
+brew "eza"          # モダンなls
+brew "ripgrep"      # 高速grep (rg)
+brew "fd"           # 高速find
+brew "lazygit"      # Git TUI
+brew "zoxide"       # スマートなcd
+brew "tmux"         # ターミナルマルチプレクサ
+
+# macOS GUIアプリ
 cask "affinity"
 cask "clipy"
 cask "discord"

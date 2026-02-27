@@ -1,6 +1,4 @@
 #
-#
-eval "$(/opt/homebrew/bin/brew shellenv zsh)"
 # Executes commands at login pre-zshrc.
 #
 # Authors:
@@ -8,11 +6,34 @@ eval "$(/opt/homebrew/bin/brew shellenv zsh)"
 #
 
 #
+# Homebrew
+#
+if [[ "$OSTYPE" == darwin* ]]; then
+  # Apple Silicon Mac
+  if [[ -f "/opt/homebrew/bin/brew" ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv zsh)"
+  # Intel Mac
+  elif [[ -f "/usr/local/bin/brew" ]]; then
+    eval "$(/usr/local/bin/brew shellenv zsh)"
+  fi
+elif [[ "$OSTYPE" == linux* ]]; then
+  if [[ -f "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
+  elif [[ -f "$HOME/.linuxbrew/bin/brew" ]]; then
+    eval "$($HOME/.linuxbrew/bin/brew shellenv zsh)"
+  fi
+fi
+
+#
 # Browser
 #
 
-if [[ -z "$BROWSER" && "$OSTYPE" == darwin* ]]; then
-  export BROWSER='open'
+if [[ -z "$BROWSER" ]]; then
+  if [[ "$OSTYPE" == darwin* ]]; then
+    export BROWSER='open'
+  elif [[ "$OSTYPE" == linux* ]]; then
+    export BROWSER='xdg-open'
+  fi
 fi
 
 #
@@ -20,14 +41,17 @@ fi
 #
 
 if [[ -z "$EDITOR" ]]; then
-  export EDITOR='nano'
+  export EDITOR='nvim'
 fi
 if [[ -z "$VISUAL" ]]; then
-  export VISUAL='nano'
+  export VISUAL='nvim'
 fi
 if [[ -z "$PAGER" ]]; then
   export PAGER='less'
 fi
+
+# nvim でmanページを表示
+export MANPAGER='nvim +Man!'
 
 #
 # Language
@@ -53,6 +77,8 @@ typeset -gU cdpath fpath mailpath path
 path=(
   $HOME/{,s}bin(N)
   /opt/{homebrew,local}/{,s}bin(N)
+  /home/linuxbrew/.linuxbrew/{,s}bin(N)
+  $HOME/.linuxbrew/{,s}bin(N)
   /usr/local/{,s}bin(N)
   $path
 )

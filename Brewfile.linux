@@ -1,0 +1,26 @@
+# Linux用パッケージ (Linuxbrew)
+# caskは非対応のため、CLIツールのみ記載
+# GUIアプリは各ディストリビューションのパッケージマネージャーや
+# Flatpak/Snap で別途インストールしてください
+
+# 必須ツール
+brew "git"
+brew "gh"           # GitHub CLI
+brew "mise"         # ランタイムバージョン管理 (node, go, rust, etc.)
+
+# 快適なCLI体験
+brew "fzf"          # ファジーファインダー
+brew "bat"          # シンタックスハイライト付きcat
+brew "eza"          # モダンなls
+brew "ripgrep"      # 高速grep (rg)
+brew "fd"           # 高速find
+brew "lazygit"      # Git TUI
+brew "zoxide"       # スマートなcd
+brew "tmux"         # ターミナルマルチプレクサ
+
+# エディタ / ターミナル
+brew "neovim"       # mise で管理する場合は不要
+brew "wezterm"      # Linuxバイナリも提供あり
+
+# ネットワーク
+brew "wireshark"    # パケット解析 (GUIは wireshark-cli + GTK別途)
