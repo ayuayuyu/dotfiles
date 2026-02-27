@@ -87,7 +87,135 @@ else
 fi
 
 # ----------------------------------------
-# 2. Preztoのインストール (Zshフレームワーク)
+# 2. Git ユーザー設定
+# ----------------------------------------
+echo ""
+echo "=== Git ユーザー設定 ==="
+
+CURRENT_GIT_NAME="$(git config --global user.name 2>/dev/null || true)"
+CURRENT_GIT_EMAIL="$(git config --global user.email 2>/dev/null || true)"
+
+if [ -n "$CURRENT_GIT_NAME" ]; then
+    echo "Git ユーザー名: $CURRENT_GIT_NAME (設定済み)"
+else
+    printf "Git ユーザー名を入力してください: "
+    read -r GIT_NAME < /dev/tty
+    if [ -n "$GIT_NAME" ]; then
+        git config --global user.name "$GIT_NAME"
+        echo "設定しました: user.name = $GIT_NAME"
+    fi
+fi
+
+if [ -n "$CURRENT_GIT_EMAIL" ]; then
+    echo "Git メールアドレス: $CURRENT_GIT_EMAIL (設定済み)"
+else
+    printf "Git メールアドレスを入力してください: "
+    read -r GIT_EMAIL < /dev/tty
+    if [ -n "$GIT_EMAIL" ]; then
+        git config --global user.email "$GIT_EMAIL"
+        echo "設定しました: user.email = $GIT_EMAIL"
+    fi
+fi
+
+# ----------------------------------------
+# 3. SSH キーの設定 (GitHub 用)
+# ----------------------------------------
+echo ""
+echo "=== SSH キー設定 ==="
+
+SSH_KEY="$HOME/.ssh/id_ed25519"
+SSH_CONFIG="$HOME/.ssh/config"
+
+if [ ! -f "$SSH_KEY" ]; then
+    echo "🔑 SSH キーを生成します (ed25519)..."
+    SSH_EMAIL="$(git config --global user.email 2>/dev/null || echo 'your@email.com')"
+    mkdir -p "$HOME/.ssh"
+    chmod 700 "$HOME/.ssh"
+    # パスフレーズは対話的に入力 (空でもOK)
+    ssh-keygen -t ed25519 -C "$SSH_EMAIL" -f "$SSH_KEY"
+else
+    echo "SSH キーは既に存在します: $SSH_KEY"
+fi
+
+# ssh-agent に追加
+eval "$(ssh-agent -s)" > /dev/null 2>&1 || true
+
+if [ "$OS_TYPE" = "Darwin" ]; then
+    # macOS: キーチェーンに保存
+    ssh-add --apple-use-keychain "$SSH_KEY" 2>/dev/null || ssh-add "$SSH_KEY" 2>/dev/null || true
+else
+    ssh-add "$SSH_KEY" 2>/dev/null || true
+fi
+
+# ~/.ssh/config に GitHub ホスト設定を追加
+if ! grep -q "Host github.com" "$SSH_CONFIG" 2>/dev/null; then
+    echo "~/.ssh/config に GitHub の設定を追加..."
+    mkdir -p "$HOME/.ssh"
+    {
+        echo ""
+        echo "Host github.com"
+        echo "  HostName github.com"
+        echo "  User git"
+        echo "  IdentityFile ~/.ssh/id_ed25519"
+        echo "  AddKeysToAgent yes"
+        if [ "$OS_TYPE" = "Darwin" ]; then
+            echo "  UseKeychain yes"
+        fi
+    } >> "$SSH_CONFIG"
+    chmod 600 "$SSH_CONFIG"
+    echo "設定を追加しました: $SSH_CONFIG"
+else
+    echo "~/.ssh/config に GitHub の設定は既にあります。"
+fi
+
+# GitHub への SSH 公開鍵登録
+echo ""
+echo "▼ GitHub に登録する SSH 公開鍵:"
+cat "${SSH_KEY}.pub"
+echo ""
+
+if command -v gh &>/dev/null; then
+    if gh auth status &>/dev/null 2>&1; then
+        echo "gh CLI で SSH 公開鍵を GitHub に登録しますか？ [y/N]: "
+        read -r REGISTER_KEY < /dev/tty
+        if [[ "$REGISTER_KEY" =~ ^[Yy]$ ]]; then
+            KEY_TITLE="$(hostname)-$(date +%Y%m%d)"
+            gh ssh-key add "${SSH_KEY}.pub" --title "$KEY_TITLE" \
+                && echo "SSH キーを GitHub に登録しました (タイトル: $KEY_TITLE)" \
+                || echo "登録に失敗しました (既に登録済みの可能性があります)。"
+        fi
+    else
+        echo "GitHub CLI でログインしますか？ログイン後に SSH キーを自動登録できます。 [y/N]: "
+        read -r DO_LOGIN < /dev/tty
+        if [[ "$DO_LOGIN" =~ ^[Yy]$ ]]; then
+            gh auth login
+            # ログイン成功後にキーを登録
+            if gh auth status &>/dev/null 2>&1; then
+                KEY_TITLE="$(hostname)-$(date +%Y%m%d)"
+                gh ssh-key add "${SSH_KEY}.pub" --title "$KEY_TITLE" \
+                    && echo "SSH キーを GitHub に登録しました (タイトル: $KEY_TITLE)" \
+                    || true
+            fi
+        else
+            echo "手動で以下の公開鍵を GitHub に追加してください:"
+            echo "  https://github.com/settings/ssh/new"
+        fi
+    fi
+else
+    echo "手動で以下の公開鍵を GitHub に追加してください:"
+    echo "  https://github.com/settings/ssh/new"
+fi
+
+# SSH 接続テスト
+echo ""
+printf "GitHub への SSH 接続テストを行いますか？ [y/N]: "
+read -r DO_SSH_TEST < /dev/tty
+if [[ "$DO_SSH_TEST" =~ ^[Yy]$ ]]; then
+    ssh -T git@github.com 2>&1 || true
+fi
+
+# ----------------------------------------
+# 5. Preztoのインストール (Zshフレームワーク)
 # ----------------------------------------
 ZPREZTO_DIR="${ZDOTDIR:-$HOME}/.zprezto"
 if [ ! -d "$ZPREZTO_DIR" ]; then
@@ -98,7 +226,7 @@ else
 fi
 
 # ----------------------------------------
-# 3. シンボリックリンクの作成
+# 6. シンボリックリンクの作成
 # ----------------------------------------
 echo "シンボリックリンクを作成..."
 
@@ -157,13 +285,44 @@ if [ -d "$DOTFILES_DIR/config" ]; then
 fi
 
 # ----------------------------------------
-# 4. mise でランタイムをインストール (macOS)
+# 7. mise でランタイムをインストール (macOS)
 # ----------------------------------------
 if [ "$OS_TYPE" = "Darwin" ]; then
     if command -v mise &> /dev/null; then
         echo "mise でランタイムをインストール..."
-        # シンボリックリンク作成後なので ~/.config/mise/config.toml が有効
-        mise install || echo "mise のインストールで一部失敗しましたが続行します。"
+
+        # GitHub API レート制限回避: gh CLI からトークンを取得して設定
+        # (gh auth login は セクション3 で実施済みなのでここで取得できる)
+        if [ -z "${GITHUB_TOKEN:-}" ] && command -v gh &>/dev/null; then
+            if gh auth status &>/dev/null 2>&1; then
+                export GITHUB_TOKEN="$(gh auth token 2>/dev/null)"
+                echo "GITHUB_TOKEN を gh CLI から取得しました。"
+            else
+                echo ""
+                echo "⚠️  GITHUB_TOKEN が未設定です。"
+                echo "   mise が GitHub API にアクセスする際にレート制限に引っかかる場合があります。"
+                echo "   事前に gh auth login を実行するか、以下で手動設定してください:"
+                echo "   https://github.com/settings/tokens (スコープ不要)"
+                echo ""
+                printf "続行しますか？ [y/N]: "
+                read -r CONTINUE_MISE < /dev/tty
+                if [[ ! "$CONTINUE_MISE" =~ ^[Yy]$ ]]; then
+                    echo "スキップ: mise install を後で手動で実行してください。"
+                    echo "  GITHUB_TOKEN=\$(gh auth token) mise install"
+                    SKIP_MISE=1
+                fi
+            fi
+        fi
+
+        if [ "${SKIP_MISE:-0}" != "1" ]; then
+            # シンボリックリンク作成後なので ~/.config/mise/config.toml が有効
+            if ! mise install; then
+                echo ""
+                echo "⚠️  mise install が失敗しました。"
+                echo "   GitHub のレート制限が原因の場合は、しばらく待ってから以下を実行してください:"
+                echo "   GITHUB_TOKEN=\$(gh auth token) mise install"
+            fi
+        fi
     else
         echo "スキップ: mise が見つかりません (Homebrew のセットアップを確認してください)。"
     fi

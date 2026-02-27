@@ -10,6 +10,7 @@ brew "fd"           # 高速find
 brew "lazygit"      # Git TUI
 brew "zoxide"       # スマートなcd
 brew "tmux"         # ターミナルマルチプレクサ
+brew "neovim"       # エディタ (mise ではなく brew で管理)
 
 # macOS GUIアプリ
 cask "affinity"
