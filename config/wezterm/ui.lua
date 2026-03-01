@@ -10,6 +10,21 @@ local config = {
 	window_background_opacity = 0.75,
 	window_decorations = "RESIZE",
 	default_cursor_style = "BlinkingBar",
+	window_padding = {
+		left = 8,
+		right = 8,
+		top = 4,
+		bottom = 4,
+	},
+
+	-- カーソルブリンク
+	cursor_blink_rate = 500,
+	cursor_blink_ease_in = "EaseIn",
+	cursor_blink_ease_out = "EaseOut",
+
+	-- スクロールバック・アニメーション
+	scrollback_lines = 10000,
+	animation_fps = 60,
 
 	-- ビープ音無効化
 	audible_bell = "Disabled",
