@@ -75,8 +75,64 @@ return {
     { key = 'd', mods = mod,       action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
     { key = 'd', mods = mod_shift, action = act.SplitVertical   { domain = 'CurrentPaneDomain' } },
 
+    -- ペイン移動 (vim ライク)
+    { key = 'h', mods = mod, action = act.ActivatePaneDirection 'Left'  },
+    { key = 'j', mods = mod, action = act.ActivatePaneDirection 'Down'  },
+    { key = 'k', mods = mod, action = act.ActivatePaneDirection 'Up'    },
+    { key = 'l', mods = mod, action = act.ActivatePaneDirection 'Right' },
+
+    -- ペインリサイズ
+    { key = 'h', mods = mod_shift, action = act.AdjustPaneSize { 'Left',  5 } },
+    { key = 'j', mods = mod_shift, action = act.AdjustPaneSize { 'Down',  5 } },
+    { key = 'k', mods = mod_shift, action = act.AdjustPaneSize { 'Up',    5 } },
+    { key = 'l', mods = mod_shift, action = act.AdjustPaneSize { 'Right', 5 } },
+
+    -- ペインズーム（トグル）
+    { key = 'z', mods = mod, action = act.TogglePaneZoomState },
+
+    -- 現在のペインを閉じる
+    { key = 'x', mods = mod, action = act.CloseCurrentPane { confirm = true } },
+
+    -- タブ操作
+    { key = 't', mods = mod, action = act.SpawnTab 'CurrentPaneDomain' },
+    { key = 'w', mods = mod, action = act.CloseCurrentTab { confirm = false } },
+
+    -- タブ番号で直接移動
+    { key = '1', mods = mod, action = act.ActivateTab(0) },
+    { key = '2', mods = mod, action = act.ActivateTab(1) },
+    { key = '3', mods = mod, action = act.ActivateTab(2) },
+    { key = '4', mods = mod, action = act.ActivateTab(3) },
+    { key = '5', mods = mod, action = act.ActivateTab(4) },
+    { key = '6', mods = mod, action = act.ActivateTab(5) },
+    { key = '7', mods = mod, action = act.ActivateTab(6) },
+    { key = '8', mods = mod, action = act.ActivateTab(7) },
+    { key = '9', mods = mod, action = act.ActivateTab(8) },
+
+    -- 前/次のタブに移動
+    { key = '[', mods = mod_shift, action = act.ActivateTabRelative(-1) },
+    { key = ']', mods = mod_shift, action = act.ActivateTabRelative(1)  },
+
+    -- タブの位置を入れ替え
+    { key = 'LeftArrow',  mods = mod_shift, action = act.MoveTabRelative(-1) },
+    { key = 'RightArrow', mods = mod_shift, action = act.MoveTabRelative(1)  },
+
     -- CopyMode に入る (vim ライクなスクロール/検索)
     { key = '[', mods = mod, action = act.ActivateCopyMode },
+
+    -- 便利機能
+    { key = 'Space', mods = mod_shift, action = act.QuickSelect },
+    { key = 'u',     mods = mod,       action = act.QuickSelectArgs {
+      label = 'open url',
+      patterns = { 'https?://\\S+' },
+      action = wezterm.action_callback(function(window, pane)
+        local url = window:get_selection_text_for_pane(pane)
+        wezterm.open_with(url)
+      end),
+    }},
+    { key = 'f', mods = mod, action = act.Search { CaseSensitiveString = '' } },
+    { key = 'p', mods = mod, action = act.ActivateCommandPalette },
+    { key = 'c', mods = mod_shift, action = act.CopyTo 'Clipboard'    },
+    { key = 'v', mods = mod_shift, action = act.PasteFrom 'Clipboard' },
 
     -- カーソル移動 (Emacs ライクなバインディング)
     { key = "LeftArrow",  mods = mod,   action = act.SendKey { key = "a", mods = "CTRL" } },
@@ -89,7 +145,7 @@ return {
     -- 画面の最大化/元に戻す
     { key = 'f', mods = mod_ctrl, action = act.ToggleFullScreen },
 
-    { key = 'w', mods = mod,   action = act.CloseCurrentTab { confirm = false } },
+    -- ワークスペース
     { key = 'w', mods = 'ALT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
   },
 

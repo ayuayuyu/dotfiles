@@ -70,8 +70,14 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
       title_text = pane.title
   end
 
+  -- ペイン数が2以上なら表示
+  local pane_count = ""
+  if #tab.panes > 1 then
+    pane_count = " [" .. #tab.panes .. "]"
+  end
+
   -- 表示内容（アイコンとタイトルの間に余裕を持たせる）
-  local display_title = string.format("  %s  %s  ", icon, wezterm.truncate_right(title_text, max_width - 8))
+  local display_title = string.format("  %s  %s%s  ", icon, wezterm.truncate_right(title_text, max_width - 8), pane_count)
 
   return {
     { Background = { Color = edge_background } },
@@ -91,11 +97,27 @@ wezterm.on('update-status', function(window, pane)
   local hostname = wezterm.hostname()
   local date = wezterm.strftime '%H:%M'
 
+  -- カレントディレクトリ（フォルダ名のみ）
+  local cwd = ""
+  local cwd_uri = pane:get_current_working_dir()
+  if cwd_uri then
+    local cwd_path = cwd_uri.file_path or tostring(cwd_uri)
+    cwd = cwd_path:match("([^/]+)/?$") or cwd_path
+  end
+
   local col_bg = colors.bar_bg
   local col_main = colors.neon     -- ここで定義した水色が使われます
-  local col_sec = colors.dark_tab  
+  local col_sec = colors.dark_tab
 
   window:set_right_status(wezterm.format {
+    -- カレントディレクトリ
+    { Foreground = { Color = col_sec } },
+    { Background = { Color = col_bg } },
+    { Text = '' },
+    { Background = { Color = col_sec } },
+    { Foreground = { Color = '#c0caf5' } },
+    { Text = '  ' .. cwd .. ' ' },
+
     -- ホスト名
     { Foreground = { Color = col_sec } },
     { Background = { Color = col_bg } },

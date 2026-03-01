@@ -19,10 +19,6 @@ merge_config(ui)
 merge_config(keys)
 merge_config(bar.config)
 
-config.use_fancy_tab_bar = false
-config.tab_bar_at_bottom = true
-config.hide_tab_bar_if_only_one_tab = false
-
 wezterm.on("gui-startup", function(cmd)
 	local tab, pane, window = wezterm.mux.spawn_window(cmd or {})
 	window:gui_window():toggle_fullscreen()
