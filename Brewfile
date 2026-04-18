@@ -11,6 +11,8 @@ brew "lazygit"      # Git TUI
 brew "zoxide"       # スマートなcd
 brew "tmux"         # ターミナルマルチプレクサ
 brew "neovim"       # エディタ (mise ではなく brew で管理)
+brew "starship"     # クロスシェルプロンプト
+brew "sheldon"      # zshプラグインマネージャ
 
 # macOS GUIアプリ
 cask "affinity"
@@ -22,5 +24,5 @@ cask "font-jetbrains-mono"
 cask "obsidian"
 cask "raycast"
 cask "visual-studio-code"
-cask "wezterm"
+cask "ghostty"
 cask "wireshark-app"

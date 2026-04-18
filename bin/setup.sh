@@ -33,7 +33,7 @@ show_help() {
   brew    Homebrew インストール + Brewfile によるパッケージインストール
   git     Git ユーザー設定
   ssh     SSH キー生成・GitHub 登録
-  prezto  Prezto (zsh フレームワーク) インストール
+  sheldon sheldon プラグインインストール
   link    シンボリックリンク作成（zsh, config）
   mise    mise ランタイムインストール
   macos   macOS 固有設定（システム設定の変更）
@@ -255,16 +255,15 @@ setup_ssh() {
 # ----------------------------------------
 # サブコマンド: prezto
 # ----------------------------------------
-setup_prezto() {
+setup_sheldon() {
     echo ""
-    echo "=== Prezto セットアップ ==="
+    echo "=== sheldon セットアップ ==="
 
-    ZPREZTO_DIR="${ZDOTDIR:-$HOME}/.zprezto"
-    if [ ! -d "$ZPREZTO_DIR" ]; then
-        echo "Preztoをインストール..."
-        git clone --recursive https://github.com/sorin-ionescu/prezto.git "$ZPREZTO_DIR"
+    if command -v sheldon &>/dev/null; then
+        echo "sheldon lock を実行してプラグインをインストール..."
+        sheldon lock
     else
-        echo "Preztoは既にインストールされています。"
+        echo "スキップ: sheldon が見つかりません (brew install sheldon)。"
     fi
 }
 
@@ -418,7 +417,7 @@ setup_all() {
     setup_brew
     setup_git
     setup_ssh
-    setup_prezto
+    setup_sheldon
     setup_link
     setup_mise
     setup_macos
@@ -435,7 +434,7 @@ case "${1:-all}" in
     brew)   setup_brew ;;
     git)    setup_git ;;
     ssh)    setup_ssh ;;
-    prezto) setup_prezto ;;
+    sheldon) setup_sheldon ;;
     link)   setup_link ;;
     mise)   setup_mise ;;
     macos)  setup_macos ;;

@@ -1,0 +1,83 @@
+# Starship Prompt Configuration
+# Tokyo Night テーマ
+
+add_newline = false
+
+format = """
+$directory\
+$git_branch\
+$git_status\
+$fill\
+$nodejs\
+$golang\
+$rust\
+$python\
+$cmd_duration\
+$jobs\
+$line_break\
+$character"""
+
+# --- ディレクトリ ---
+[directory]
+style = "fg:#7aa2f7 bold"
+format = "[$path]($style)"
+truncation_length = 3
+truncate_to_repo = true
+
+[directory.substitutions]
+"Documents" = "docs"
+"Downloads" = "dl"
+
+# --- Git ---
+[git_branch]
+style = "fg:#bb9af7 bold"
+format = " [$symbol$branch]($style)"
+symbol = " "
+
+[git_status]
+style = "fg:#e0af68"
+format = "[$all_status$ahead_behind]($style)"
+
+# --- 言語バージョン ---
+[nodejs]
+style = "fg:#9ece6a"
+format = " [$symbol($version)]($style)"
+symbol = " "
+detect_files = ["package.json", ".node-version"]
+
+[golang]
+style = "fg:#7dcfff"
+format = " [$symbol($version)]($style)"
+symbol = " "
+
+[rust]
+style = "fg:#f7768e"
+format = " [$symbol($version)]($style)"
+symbol = " "
+
+[python]
+style = "fg:#e0af68"
+format = " [$symbol($version)]($style)"
+symbol = " "
+
+# --- コマンド実行時間 ---
+[cmd_duration]
+style = "fg:#565f89"
+format = " [$duration]($style)"
+min_time = 2_000
+
+# --- バックグラウンドジョブ ---
+[jobs]
+style = "fg:#ff9e64"
+format = " [$symbol$number]($style)"
+symbol = " "
+
+# --- 右寄せ用 ---
+[fill]
+symbol = " "
+
+# --- プロンプト文字 ---
+[character]
+success_symbol = "[>](fg:#7aa2f7 bold)"
+error_symbol = "[>](fg:#f7768e bold)"
+vimcmd_symbol = "[<](fg:#9ece6a bold)"
