@@ -81,7 +81,7 @@ return {
       })
     end,
     keys = {
-      { "<Space>e", "<cmd>Neotree toggle<CR>", desc = "Toggle Explorer" }
+      { "<leader>e", "<cmd>Neotree toggle<CR>", desc = "Toggle Explorer" }
     }
   },
 }

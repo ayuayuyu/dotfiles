@@ -1,0 +1,100 @@
+# =============================================================================
+# Ghostty Configuration
+# tmux統合 + Quick Terminal用のドロップダウンターミナル設定
+# =============================================================================
+
+# --- フォント ---
+font-family = Hack Nerd Font Propo
+font-size = 14
+
+# --- カラー (Neon Cyan テーマ) ---
+background = 0f1419
+foreground = e6e8eb
+cursor-color = 00d4ff
+cursor-text = 000000
+selection-background = 004d61
+selection-foreground = ffffff
+palette = 0=#0f1419
+palette = 1=#ff5c57
+palette = 2=#5af78e
+palette = 3=#f3f99d
+palette = 4=#57c7ff
+palette = 5=#ff6ac1
+palette = 6=#00d4ff
+palette = 7=#e6e8eb
+palette = 8=#686868
+palette = 9=#ff5c57
+palette = 10=#5af78e
+palette = 11=#f3f99d
+palette = 12=#57c7ff
+palette = 13=#ff6ac1
+palette = 14=#00d4ff
+palette = 15=#ffffff
+
+# --- ウィンドウ ---
+fullscreen = false
+background-opacity = 0.75
+background-blur = 15
+window-padding-x = 0
+window-padding-y = 0
+window-padding-balance = true
+window-padding-color = extend
+window-save-state = never
+macos-titlebar-style = hidden
+macos-titlebar-proxy-icon = hidden
+initial-window = false
+
+# --- Quick Terminal (全画面オーバーレイ) ---
+quick-terminal-position = center
+quick-terminal-screen = mouse
+quick-terminal-size = 100%,100%
+quick-terminal-animation-duration = 0
+quick-terminal-autohide = true
+keybind = global:super+grave_accent=toggle_quick_terminal
+
+# --- カーソル ---
+cursor-style = bar
+cursor-style-blink = true
+
+# --- その他 ---
+mouse-hide-while-typing = true
+copy-on-select = clipboard
+scrollback-limit = 10000
+
+# --- tmux連携 ---
+# Option+キーをAltとして送信
+macos-option-as-alt = true
+
+# --- キーバインド ---
+keybind = ctrl+super+f=toggle_fullscreen
+
+# --- tmux操作をCmd キーで (prefix = Ctrl+b) ---
+# 新しいウィンドウ(タブ): Cmd+t
+keybind = super+t=text:\x02c
+# ウィンドウを閉じる: Cmd+w
+keybind = super+w=text:\x02&
+# 縦分割: Cmd+d
+keybind = super+d=text:\x02v
+# 横分割: Cmd+shift+d
+keybind = super+shift+d=text:\x02s
+# ペイン移動: Cmd+h/j/k/l
+keybind = super+h=text:\x02h
+keybind = super+j=text:\x02j
+keybind = super+k=text:\x02k
+keybind = super+l=text:\x02l
+# ウィンドウ切替: Cmd+1〜9
+keybind = super+one=text:\x021
+keybind = super+two=text:\x022
+keybind = super+three=text:\x023
+keybind = super+four=text:\x024
+keybind = super+five=text:\x025
+keybind = super+six=text:\x026
+keybind = super+seven=text:\x027
+keybind = super+eight=text:\x028
+keybind = super+nine=text:\x029
+# 前のウィンドウ: Cmd+Shift+h
+keybind = super+shift+h=text:\x02p
+# 次のウィンドウ: Cmd+Shift+l
+keybind = super+shift+l=text:\x02n
+# 同時入力トグル: Cmd+e
+keybind = super+e=text:\x02S

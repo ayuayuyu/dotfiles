@@ -1,1 +1,11 @@
 .DS_Store
+
+# Raycast extensions (自動更新されるファイル)
+config/raycast/extensions/
+
+# Wireshark (自動生成される履歴)
+config/wireshark/recent
+config/wireshark/recent_common
+
+# Zellij (tmuxに移行済み)
+config/zellij/
