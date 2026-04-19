@@ -5,13 +5,11 @@ return {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     event = { "BufReadPost", "BufNewFile" },
-    config = function()
-      require("nvim-treesitter.configs").setup({
-        ensure_installed = { "c", "lua", "vim", "go", "javascript", "typescript", "tsx", "json", "markdown" },
-        highlight = { enable = true },
-        indent = { enable = true },
-      })
-    end,
+    opts = {
+      ensure_installed = { "c", "lua", "vim", "go", "javascript", "typescript", "tsx", "json", "markdown" },
+      highlight = { enable = true },
+      indent = { enable = true },
+    },
   },
 
   -- 2. Which-key (キーバインド一覧をポップアップ表示)
@@ -39,7 +37,18 @@ return {
     end,
   },
 
-  -- 3. Trouble.nvim (VSCode の「問題」パネル相当)
+  -- 3. インデントガイド (VSCode風の縦線)
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    event = { "BufReadPost", "BufNewFile" },
+    opts = {
+      indent = { char = "│" },
+      scope = { enabled = true, show_start = false, show_end = false },
+    },
+  },
+
+  -- 4. Trouble.nvim (VSCode の「問題」パネル相当)
   --    <leader>xx で全エラー一覧を表示
   {
     "folke/trouble.nvim",

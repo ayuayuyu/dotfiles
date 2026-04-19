@@ -29,3 +29,7 @@ vim.opt.splitright = true  -- 垂直分割は右に開く
 
 -- アンドゥ履歴を永続化（再起動後もUndo可能）
 vim.opt.undofile = true
+
+-- スペルチェック（英語のみ、日本語はスキップ）
+vim.opt.spell = true
+vim.opt.spelllang = { "en", "cjk" }

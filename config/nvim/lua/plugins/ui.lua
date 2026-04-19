@@ -1,12 +1,21 @@
 -- ~/.config/nvim/lua/plugins/ui.lua
 return {
-  -- 1. カラースキーム (TokyoNight)
+  -- 1. カラースキーム (Tokyo Night)
   {
     "folke/tokyonight.nvim",
     lazy = false,
     priority = 1000,
     config = function()
-      vim.cmd([[colorscheme tokyonight-night]])
+      require("tokyonight").setup({
+        style = "night",
+        transparent = true,
+        styles = {
+          comments = { italic = true },
+          sidebars = "transparent",
+          floats = "transparent",
+        },
+      })
+      vim.cmd([[colorscheme tokyonight]])
     end,
   },
 
@@ -15,11 +24,17 @@ return {
     "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
-      require("lualine").setup({ options = { theme = "tokyonight" } })
+      require("lualine").setup({
+        options = {
+          theme = "tokyonight",
+          section_separators = { left = "", right = "" },
+          component_separators = { left = "", right = "" },
+        },
+      })
     end,
   },
 
-  -- 3. バッファーライン (画面上のタブバー) ★新規追加
+  -- 3. バッファーライン (画面上のタブバー)
   {
     "akinsho/bufferline.nvim",
     version = "*",
@@ -27,18 +42,18 @@ return {
     config = function()
       require("bufferline").setup({
         options = {
-          mode = "buffers", -- タブではなくバッファを表示
-          diagnostics = "nvim_lsp", -- エラーがあればアイコンを表示
-          -- 左側のNeo-treeの分だけずらす設定
+          mode = "buffers",
+          diagnostics = "nvim_lsp",
+          separator_style = "thin",
           offsets = {
             {
               filetype = "neo-tree",
-              text = "File Explorer",
+              text = "Explorer",
               highlight = "Directory",
               separator = true,
             }
           },
-        }
+        },
       })
     end,
   },
@@ -68,6 +83,14 @@ return {
       filesystem = {
         follow_current_file = { enabled = true, leave_dirs_open = true },
         hijack_netrw_behavior = "open_default",
+        bind_to_cwd = true,
+      },
+      window = {
+        mappings = {
+          -- 親ディレクトリへの移動を無効化（VSCodeライクに）
+          ["-"] = "none",
+          ["<bs>"] = "none",
+        },
       },
     },
     config = function(_, opts)
