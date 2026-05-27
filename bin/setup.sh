@@ -38,6 +38,7 @@ show_help() {
   mise    mise ランタイムインストール
   macos   macOS 固有設定（システム設定の変更）
   nvim    Neovim セットアップ（リンク + プラグイン同期）
+  tmux    tmux セットアップ（TPM + プラグインインストール）
   help    この使い方を表示
 
 引数なしで実行すると全セットアップを順番に実行します。
@@ -184,25 +185,20 @@ setup_ssh() {
         ssh-add "$SSH_KEY" 2>/dev/null || true
     fi
 
-    # ~/.ssh/config に GitHub ホスト設定を追加
-    if ! grep -q "Host github.com" "$SSH_CONFIG" 2>/dev/null; then
-        echo "~/.ssh/config に GitHub の設定を追加..."
-        mkdir -p "$HOME/.ssh"
-        {
-            echo ""
-            echo "Host github.com"
-            echo "  HostName github.com"
-            echo "  User git"
-            echo "  IdentityFile ~/.ssh/id_ed25519"
-            echo "  AddKeysToAgent yes"
-            if [ "$OS_TYPE" = "Darwin" ]; then
-                echo "  UseKeychain yes"
-            fi
-        } >> "$SSH_CONFIG"
-        chmod 600 "$SSH_CONFIG"
-        echo "設定を追加しました: $SSH_CONFIG"
-    else
-        echo "~/.ssh/config に GitHub の設定は既にあります。"
+    # ~/.ssh/config をdotfilesからシンボリックリンク
+    echo "~/.ssh/config をdotfilesからリンク..."
+    mkdir -p "$HOME/.ssh"
+    chmod 700 "$HOME/.ssh"
+    # 接続多重化用のソケットディレクトリ
+    mkdir -p "$HOME/.ssh/sockets"
+    link_file "$DOTFILES_DIR/ssh/config" "$SSH_CONFIG"
+    chmod 600 "$SSH_CONFIG"
+
+    # config.local がなければ作成 (個別ホスト設定用)
+    if [ ! -f "$HOME/.ssh/config.local" ]; then
+        echo "# 個別ホスト設定をここに記述 (dotfiles管理外)" > "$HOME/.ssh/config.local"
+        chmod 600 "$HOME/.ssh/config.local"
+        echo "~/.ssh/config.local を作成しました。"
     fi
 
     # GitHub への SSH 公開鍵登録
@@ -411,6 +407,32 @@ setup_nvim() {
 }
 
 # ----------------------------------------
+# サブコマンド: tmux
+# ----------------------------------------
+setup_tmux() {
+    echo ""
+    echo "=== tmux セットアップ ==="
+
+    local TPM_DIR="$HOME/.tmux/plugins/tpm"
+
+    if [ -d "$TPM_DIR" ]; then
+        echo "TPM は既にインストールされています: $TPM_DIR"
+    else
+        echo "TPM (Tmux Plugin Manager) をインストール..."
+        git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"
+    fi
+
+    # tmux が起動中ならプラグインをインストール
+    if command -v tmux &>/dev/null && tmux list-sessions &>/dev/null 2>&1; then
+        echo "tmux プラグインをインストール中..."
+        tmux source-file ~/.config/tmux/tmux.conf 2>/dev/null
+        "$TPM_DIR/bin/install_plugins"
+    else
+        echo "tmux 起動後に prefix + I でプラグインをインストールしてください。"
+    fi
+}
+
+# ----------------------------------------
 # 全実行
 # ----------------------------------------
 setup_all() {
@@ -421,6 +443,7 @@ setup_all() {
     setup_link
     setup_mise
     setup_macos
+    setup_tmux
 }
 
 # ----------------------------------------
@@ -439,6 +462,7 @@ case "${1:-all}" in
     mise)   setup_mise ;;
     macos)  setup_macos ;;
     nvim)   setup_nvim ;;
+    tmux)   setup_tmux ;;
     all)    setup_all ;;
     help|-h|--help) show_help ;;
     *)      echo "不明なコマンド: $1"; show_help; exit 1 ;;
