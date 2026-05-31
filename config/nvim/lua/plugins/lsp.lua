@@ -18,7 +18,18 @@ return {
 
       -- 先にsetup_handlersを定義してしまう（順序依存対策）
       mason_lspconfig.setup({
-        ensure_installed = { "gopls", "ts_ls", "lua_ls" },
+        ensure_installed = {
+          "gopls",
+          "ts_ls",
+          "lua_ls",
+          "pyright",
+          "rust_analyzer",
+          "tailwindcss",
+          "eslint",
+          "jsonls",
+          "yamlls",
+          "bashls",
+        },
         handlers = {
           function(server_name)
             lspconfig[server_name].setup({
@@ -34,15 +45,22 @@ return {
           "prettier",
           "goimports",
           "stylua",
+          "ruff",
+          "shfmt",
         },
       })
 
       -- LSPキーマップ
-      vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
-      vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {})
-      vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, {})
-      vim.keymap.set('n', '[d', function() vim.diagnostic.jump({ count = -1 }) end, {})
-      vim.keymap.set('n', ']d', function() vim.diagnostic.jump({ count = 1 }) end, {})
+      vim.keymap.set('n', 'K', vim.lsp.buf.hover, { desc = "Hover Documentation" })
+      vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = "Go to Definition" })
+      vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { desc = "Go to Declaration" })
+      vim.keymap.set('n', 'gr', vim.lsp.buf.references, { desc = "Go to References" })
+      vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, { desc = "Go to Implementation" })
+      vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = "Code Action" })
+      vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { desc = "Rename Symbol" })
+      vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, { desc = "Type Definition" })
+      vim.keymap.set('n', '[d', function() vim.diagnostic.jump({ count = -1 }) end, { desc = "Prev Diagnostic" })
+      vim.keymap.set('n', ']d', function() vim.diagnostic.jump({ count = 1 }) end, { desc = "Next Diagnostic" })
     end,
   },
 
@@ -59,6 +77,13 @@ return {
         typescriptreact = { "prettier" },
         go = { "goimports", "gofmt" },
         lua = { "stylua" },
+        python = { "ruff_format", "ruff_fix" },
+        sh = { "shfmt" },
+        json = { "prettier" },
+        yaml = { "prettier" },
+        markdown = { "prettier" },
+        css = { "prettier" },
+        html = { "prettier" },
       },
     },
   },

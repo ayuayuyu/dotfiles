@@ -6,9 +6,36 @@ return {
     build = ":TSUpdate",
     event = { "BufReadPost", "BufNewFile" },
     opts = {
-      ensure_installed = { "c", "lua", "vim", "go", "javascript", "typescript", "tsx", "json", "markdown" },
+      ensure_installed = {
+        -- Neovim core
+        "c", "lua", "vim", "vimdoc", "query",
+        -- Go ecosystem
+        "go", "gomod", "gowork", "gosum",
+        -- JavaScript / TypeScript
+        "javascript", "typescript", "tsx",
+        -- Python / Rust
+        "python", "rust", "toml",
+        -- Web / Config
+        "json", "yaml", "html", "css",
+        -- Markdown
+        "markdown", "markdown_inline",
+        -- DevOps / DB
+        "bash", "dockerfile", "sql",
+        -- Git
+        "gitcommit", "gitignore", "diff",
+      },
       highlight = { enable = true },
       indent = { enable = true },
+      -- Treesitterベースの範囲選択（C-spaceで拡大、BSで縮小）
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = "<C-space>",
+          node_incremental = "<C-space>",
+          scope_incremental = false,
+          node_decremental = "<bs>",
+        },
+      },
     },
   },
 
@@ -32,7 +59,12 @@ return {
         { "<leader>f",  group = "Find (Telescope)" },
         { "<leader>x",  group = "Trouble (Diagnostics)" },
         { "<leader>b",  group = "Buffer" },
-        { "<leader>r",  group = "REST API" },
+        { "<leader>r",  group = "REST API / Replace" },
+        { "<leader>s",  group = "Search" },
+        { "gz",         group = "Surround" },
+        { "gc",         group = "Comment" },
+        { "]",          group = "Next..." },
+        { "[",          group = "Prev..." },
       })
     end,
   },
@@ -48,7 +80,21 @@ return {
     },
   },
 
-  -- 4. Trouble.nvim (VSCode の「問題」パネル相当)
+  -- 4. TODO/FIXME/HACK ハイライト & ジャンプ
+  {
+    "folke/todo-comments.nvim",
+    event = { "BufReadPost", "BufNewFile" },
+    dependencies = { "nvim-lua/plenary.nvim" },
+    opts = {},
+    keys = {
+      { "]t", function() require("todo-comments").jump_next() end, desc = "Next TODO" },
+      { "[t", function() require("todo-comments").jump_prev() end, desc = "Prev TODO" },
+      { "<leader>xt", "<cmd>Trouble todo toggle<cr>",              desc = "TODOs (Trouble)" },
+      { "<leader>ft", "<cmd>TodoTelescope<cr>",                    desc = "Find TODOs" },
+    },
+  },
+
+  -- 5. Trouble.nvim (VSCode の「問題」パネル相当)
   --    <leader>xx で全エラー一覧を表示
   {
     "folke/trouble.nvim",
