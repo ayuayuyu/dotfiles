@@ -11,14 +11,7 @@
         user = "git";
       };
 
-      "llm" = {
-        hostname = "REDACTED_HOST";
-        user = "REDACTED_USER";
-        localForwards = [
-          { bind.port = 8080; host.address = "127.0.0.1"; host.port = 8080; }
-          { bind.port = 11434; host.address = "127.0.0.1"; host.port = 11434; }
-        ];
-      };
+      # 内部ホスト (Host llm 等) は ~/.ssh/config.local に記述する
 
       "*" = {
         serverAliveInterval = 60;

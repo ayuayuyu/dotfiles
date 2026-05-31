@@ -88,16 +88,24 @@
       # PATH
       export PATH="''${HOME}/.local/bin:''${PATH}"
 
-      # Aider + Llama 4 Scout (REDACTED_USER server)
+      # Aider + Llama 4 Scout (内部サーバー経由)
+      # 接続先は環境変数で指定する (例: ~/.zshrc.local に export AIDER_SCOUT_SSH=user@host)
       function aider-scout() {
+        if [[ -z "$AIDER_SCOUT_SSH" ]]; then
+          echo "AIDER_SCOUT_SSH (user@host) が未設定です" >&2
+          return 1
+        fi
         if ! lsof -i:11434 -t >/dev/null 2>&1; then
-          echo "REDACTED_USER（ITS）サーバーへSSHトンネルを接続しています..."
-          ssh -N -f -L 11434:localhost:11434 REDACTED_USER@REDACTED_HOST
+          echo "$AIDER_SCOUT_SSH へSSHトンネルを接続しています..."
+          ssh -N -f -L 11434:localhost:11434 "$AIDER_SCOUT_SSH"
         fi
         export OLLAMA_API_BASE=http://localhost:11434
         echo "Llama 4 Scout (Aider) を起動します..."
         aider --model ollama/yasserrmd/Llama-4-Scout-17B-16E-Instruct "$@"
       }
+
+      # ローカル固有設定
+      [[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
     '';
 
     # --- シェルエイリアス ---

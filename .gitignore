@@ -1,5 +1,17 @@
 .DS_Store
 
+# Claude Code のローカル権限設定 (個人設定)
+.claude/
+**/.claude/
+
+# home-manager / bootstrap の退避ファイル
+*.hm-backup
+*.pre-nix-*
+
+# ローカル固有のシェル設定
+.zshrc.local
+.ssh/config.local
+
 # Raycast extensions (自動更新されるファイル)
 config/raycast/extensions/
 

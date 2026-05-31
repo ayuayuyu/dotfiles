@@ -28,11 +28,4 @@ Host github.com
   HostName github.com
   User git
 
-Host llm
-    HostName REDACTED_HOST
-    User REDACTED_USER
-    IdentityFile ~/.ssh/id_ed25519
-    LocalForward 8080  127.0.0.1:8080
-    LocalForward 11434 127.0.0.1:11434
-    ServerAliveInterval 60
-    ServerAliveCountMax 3
+# --- 内部ホスト (Host llm 等) は ~/.ssh/config.local に記述する ---
