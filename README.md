@@ -101,3 +101,17 @@ bash ~/dotfiles/bin/setup-ghostty.sh
 - **Neovim**: lazy.nvim + Mason (生 Lua, Nix 化せず)
 - **tmux**: 基本設定は `config/tmux/tmux.conf` を Nix とフォールバック両方で共有。Ghostty 連携の `terminal-features` 等は `home/tmux.nix` 側のみ
 - **書き込み可能な設定**: `mkOutOfStoreSymlink` でリポジトリ実体へ直接シンボリックリンク
+
+## 注意
+
+このリポジトリは過去に `git filter-repo` で履歴を書き換え (内部サーバー情報の除去) しています。
+**2026-06 以前にこのリポジトリを clone していた場合**、ローカル履歴がリモートと整合しません。次のいずれかで揃えてください:
+
+```sh
+# クリーンに取り直す (推奨)
+rm -rf ~/dotfiles && git clone git@github.com:ayuayuyu/dotfiles.git ~/dotfiles
+
+# 既存 clone を強制的にリモートに合わせる (ローカル変更は失われる)
+git -C ~/dotfiles fetch origin
+git -C ~/dotfiles reset --hard origin/main
+```

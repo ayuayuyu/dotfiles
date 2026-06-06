@@ -22,7 +22,8 @@
     nerd-fonts.hack
     nerd-fonts.jetbrains-mono
   ] ++ pkgs.lib.optionals isLinux [
-    # Linux 固有パッケージ
+    # Linux 固有パッケージ (macOS 側は Homebrew cask)
+    ghostty
     wezterm
     wireshark
   ];
