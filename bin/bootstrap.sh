@@ -80,6 +80,33 @@ move_if_symlink "$HOME/.zprofile"
 move_if_symlink "$HOME/.zshenv"
 move_if_symlink "$HOME/.gitconfig"
 move_if_symlink "$HOME/.tmux.conf"
+move_if_symlink "$HOME/.config/git/config"
+move_if_symlink "$HOME/.config/git/ignore"
+move_if_symlink "$HOME/.config/tmux/tmux.conf"
+move_if_symlink "$HOME/.config/starship.toml"
+
+# ----------------------------------------------------------------------------
+# 旧 dotfiles 時代の ~/.config/<name> -> ~/dotfiles/config/<name> という
+# ディレクトリレベル symlink が残っていると、home-manager の書き込みが
+# dotfiles 実体へ抜けてしまい .hm-backup が発生する。
+# 対象を退避する (nix-store を指している正規の symlink は触らない)。
+# ----------------------------------------------------------------------------
+if [ -d "$HOME/.config" ]; then
+  # 空 glob / dot-prefixed エントリの両方を安全に扱う
+  shopt -s nullglob dotglob
+  for entry in "$HOME/.config"/*; do
+    [ -L "$entry" ] || continue
+    link_target="$(readlink "$entry")"
+    case "$link_target" in
+      "$DOTFILES_DIR"/*|"$HOME"/dotfiles/*)
+        backup="${entry}.pre-nix-${TS}"
+        mv "$entry" "$backup"
+        ok "stale dir symlink を退避: $entry -> $backup"
+        ;;
+    esac
+  done
+  shopt -u nullglob dotglob
+fi
 
 # ssh 用ディレクトリ
 mkdir -p "$HOME/.ssh/sockets"

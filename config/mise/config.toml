@@ -1,1 +1,9 @@
-/nix/store/j0q43gdxn48s0hhrl8pdfcsrr7dv10pj-home-manager-files/.config/mise/config.toml
+[tools]
+# 言語ランタイム (エディタ・ツールはBrewfileで管理)
+bun = "latest"
+go = "latest"
+node = "latest"
+python = "latest"
+pnpm = "latest"
+rust = "latest"
+"npm:@openai/codex" = "latest"

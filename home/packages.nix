@@ -3,7 +3,7 @@
 {
   home.packages = with pkgs; [
     # 必須ツール
-    git
+    # git は programs.git.enable で home-manager が入れるため重複させない
     gh
 
     # 快適な CLI 体験

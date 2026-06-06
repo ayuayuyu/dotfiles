@@ -3,8 +3,14 @@
 {
   programs.git = {
     enable = true;
-    # user.name / user.email はマシンごとに異なるため、
-    # 初回セットアップ時に git config --global で設定する
+    # user.name / user.email はマシンごとに異なるため ~/.gitconfig.local に書く。
+    # 例:
+    #   [user]
+    #       name = ayuayuyu
+    #       email = umaminokiami@gmail.com
+    includes = [
+      { path = "~/.gitconfig.local"; }
+    ];
 
     settings = {
       core.editor = "nvim";
